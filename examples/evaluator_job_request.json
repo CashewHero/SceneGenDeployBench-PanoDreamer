@@ -1,0 +1,44 @@
+{
+  "contract_version": 1,
+  "job": {
+    "job_id": "smoke-evaluation-job-1",
+    "batch_id": "smoke-evaluation-batch-1",
+    "job_type": "evaluation",
+    "primary_sample": "sample-1",
+    "primary_sample_metadata": {},
+    "primary_output_metadata": {
+      "scene_scale": 1.0
+    },
+    "source_job_id": "smoke-generation-job-1",
+    "attempt": 1,
+    "timeout_seconds": 3600,
+    "parameters": {}
+  },
+  "inputs": {
+    "data": {
+      "sample-1": {
+        "image": "/data/datasets/smoke/image.png"
+      }
+    },
+    "candidate": {
+      "sample-1": {
+        "scene": "/data/output/my-generator@0.1.0/smoke-dataset/sample-1/scene.glb"
+      }
+    },
+    "references": {
+      "sample-2": {
+        "image": "/data/datasets/smoke/reference.png",
+        "camera_pose": {
+          "position": [
+            1.0,
+            0.0,
+            0.0
+          ]
+        }
+      }
+    }
+  },
+  "runtime": {
+    "output_dir": "/data/output/my-evaluator@0.1.0/my-generator@0.1.0/smoke-dataset/sample-1"
+  }
+}
