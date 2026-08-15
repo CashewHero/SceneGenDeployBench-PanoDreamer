@@ -1,0 +1,46 @@
+catalog_version: 1
+
+runners:
+  - runner: my_evaluator
+    version: 0.1.0
+    latest: true
+    display_name: My Evaluator
+    kind: evaluator
+    contract_version: 1
+    inputs:
+      data:
+        required_sample:
+          required_datatype:
+            - image
+          optional_datatype:
+            - camera_pose
+      candidate:
+        required_sample:
+          required_datatype:
+            - scene
+          optional_datatype:
+            - mesh
+      references:
+        optional_sample:
+          required_datatype:
+            - image
+            - camera_pose
+    # Optional defaults; deploybench job add --set key=value overrides them per job.
+    job_parameters: {}
+    scheduling:
+      max_batch_size: 50
+      max_attempts: 3
+      job_timeout_minutes: 30
+      startup_timeout_minutes: 5
+    launcher:
+      driver: docker
+      compat_version: 1
+      image: my-evaluator:0.1.0
+      endpoint:
+        port: 58090
+      # Optional runner-specific config examples:
+      # env:
+      #   EVAL_MODE: strict
+      #   SCORE_THRESHOLD: "0.5"
+      #   MODEL_WEIGHTS_DIR: /data/model_cache/my-evaluator/weights
+      #   HF_HOME: /data/model_cache/huggingface
