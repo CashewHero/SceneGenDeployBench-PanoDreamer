@@ -1,23 +1,41 @@
 {
   "contract_version": 1,
   "job": {
-    "job_id": "smoke-generation-job-1",
-    "batch_id": "smoke-generation-batch-1",
+    "job_id": "smoke-panodreamer-perspective-1",
+    "batch_id": "smoke-panodreamer-perspective-batch-1",
     "job_type": "generation",
-    "primary_sample": "sample-1",
+    "primary_sample": "campus",
+    "primary_sample_metadata": {
+      "projection": "pinhole",
+      "fov": 44.70194899127539
+    },
     "source_job_id": null,
     "attempt": 1,
-    "timeout_seconds": 3600,
-    "parameters": {}
+    "timeout_seconds": 21600,
+    "parameters": {
+      "prompt": "Style: campus setting DSLR 35mm landscape. Entities: neatly tucked bench, garden path, lamp posts. Background:",
+      "seed": 1234,
+      "panorama_width": 1024,
+      "panorama_steps": 1,
+      "panorama_iterations": 1,
+      "depth_iterations": 1,
+      "depth_bins": 4,
+      "metric_dataset": "vkitti",
+      "ldi_layers": 2,
+      "gs_iterations": 1,
+      "gs_views": 8,
+      "gs_init_only": true,
+      "gs_novel_view_weight": 0.0
+    }
   },
   "inputs": {
     "data": {
-      "sample-1": {
+      "campus": {
         "image": "/data/datasets/smoke/image.png"
       }
     }
   },
   "runtime": {
-    "output_dir": "/data/output/my-generator@0.1.0/smoke-dataset/sample-1"
+    "output_dir": "/data/output/panodreamer-perspective@0.1.0/smoke/campus"
   }
 }

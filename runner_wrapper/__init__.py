@@ -1,1 +1,1 @@
-# Package marker for imports such as runner_wrapper.adapter.
+"""PanoDreamer runner wrapper package."""

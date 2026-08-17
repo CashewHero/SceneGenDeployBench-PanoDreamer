@@ -1,3 +1,6 @@
 [submodule "3d-moments"]
 	path = 3d-moments
 	url = https://github.com/google-research/3d-moments.git
+[submodule "Depth-Anything-V2"]
+	path = Depth-Anything-V2
+	url = https://github.com/DepthAnything/Depth-Anything-V2.git

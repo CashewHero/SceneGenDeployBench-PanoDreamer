@@ -178,6 +178,8 @@ def main():
                         help='Apply bilateral filtering to refine depth')
     parser.add_argument('--debug', action='store_true',
                         help='Save debug visualizations')
+    parser.add_argument('--require_inpainter', action='store_true',
+                        help='Fail instead of producing foreground-only layers when the inpainter cannot load')
     
     args = parser.parse_args()
     
@@ -207,6 +209,8 @@ def main():
     
     # Load inpainter
     inpainter = load_inpainter()
+    if args.require_inpainter and inpainter is None:
+        raise RuntimeError('LDI inpainting is required but its model could not be loaded')
     
     # Generate LDI
     rgba_layers, depth_layers, mask_layers = generate_ldi(

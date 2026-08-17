@@ -1,5 +1,13 @@
 # PanoDreamer
 
+## DeployBench Runner
+
+This fork provides two SceneGenDeployBench generators. `panodreamer-perspective` accepts one perspective/pinhole `image` and a required scene prompt, then runs the full panorama, depth, LDI, and 3DGS pipeline. `panodreamer-panorama` accepts one full-360 panorama `image`, skips diffusion panorama generation, converts equirectangular input to PanoDreamer's cylindrical projection on CUDA when needed, then runs depth, LDI, and 3DGS. Both return a `3dgs` PLY file.
+
+The perspective model preprocessing resizes its input to 512x512 and assumes a horizontal field of view of approximately 44.702 degrees. Wider perspective inputs are center-cropped from their metadata FOV and narrower inputs are rejected. The panorama runner accepts `cylindrical` or `equirectangular` input and defaults missing projection metadata to equirectangular; its native model canvas is a 3912x512 full-360 cylindrical panorama with approximately 44.702 degrees of vertical coverage.
+
+See [`runner_wrapper/`](runner_wrapper/) for the runner contract, catalogs, build, and smoke-test instructions. Both runners share `PATH_MODEL_CACHE/panodreamer` by default, and model weights are not stored in the image.
+
 > PanoDreamer: Optimization-Based Single Image to 360° 3D Scene With Diffusion  
 > [Avinash Paliwal](http://avinashpaliwal.com/),
 > [Xilong Zhou](https://xilongzhou.github.io/), 
@@ -66,8 +74,8 @@ uv venv
 source .venv/bin/activate
 uv pip install -e .
 
-# Clone Depth Anything V2 (for depth estimation)
-git clone https://github.com/DepthAnything/Depth-Anything-V2.git
+# Initialize Depth Anything V2 and 3D Moments
+git submodule update --init --recursive
 
 # Download depth model checkpoint
 mkdir -p checkpoints

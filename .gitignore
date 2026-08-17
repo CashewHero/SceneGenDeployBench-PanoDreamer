@@ -13,6 +13,7 @@ ENV/
 env/
 
 # Outputs and test directories
+data/
 output/
 out_*/
 test_*/
@@ -33,8 +34,7 @@ renders_*/
 # Model checkpoints
 checkpoints/
 
-# External dependencies (cloned repos)
-Depth-Anything-V2/
+# External dependencies and local model assets
 inpainting_ckpts/
 
 # Backup files

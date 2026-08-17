@@ -30,7 +30,7 @@ Choose stable semantic data types from the benchmark domain, such as `image`, `d
 ## Adaptation Sequence
 
 1. Choose one runner role and its semantic input and output types.
-2. Replace the bundled test logic in `adapter.py` with the smallest model-specific integration.
+2. Add the smallest model-specific integration under `adapters/` and select it with `RUNNER_ADAPTER`.
 3. Update `Dockerfile` and the repository dependencies for the model. Copy `examples/dockerignore.example` to the repository root as `.dockerignore` if an equivalent file is not already present.
 4. Update the matching request example into a realistic smoke request. Copy the matching catalog example to `runner_wrapper/config/runners/<runner>.yaml`, then make both agree with the adapter.
 5. Add a short note to the model repository's main README naming the runner role, semantic inputs/outputs, and where to find the wrapper instructions.

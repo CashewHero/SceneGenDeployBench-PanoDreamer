@@ -24,7 +24,10 @@ MODEL_CONFIGS = {
     'vitg': {'encoder': 'vitg', 'features': 384, 'out_channels': [1536, 1536, 1536, 1536]}
 }
 
-_CKPT_DIR = os.path.join(os.path.dirname(_SCRIPT_DIR), 'checkpoints')
+_CKPT_DIR = os.environ.get(
+    'PANODREAMER_DAV2_CHECKPOINT_DIR',
+    os.path.join(os.path.dirname(_SCRIPT_DIR), 'checkpoints'),
+)
 
 _model = None
 _metric_model = None

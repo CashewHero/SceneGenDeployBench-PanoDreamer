@@ -11,14 +11,14 @@ safe_name() {
 
 repo_name="$(basename "${REPO_ROOT}" | safe_name)"
 
-IMAGE="${RUNNER_IMAGE:-${repo_name}-runner:local}"
+IMAGE="${RUNNER_IMAGE:-${repo_name}:local}"
 CONTAINER="${RUNNER_CONTAINER:-${repo_name}-runner-localtest}"
 HOST_PORT="${RUNNER_HOST_PORT:-58090}"
 DATA_DIR="${RUNNER_DATA_DIR:-${REPO_ROOT}/data}"
-RUNNER_NAME="${RUNNER_NAME:-${repo_name}-runner}"
+RUNNER_NAME="${RUNNER_NAME:-panodreamer-perspective}"
 RUNNER_TYPE="${RUNNER_TYPE:-generator}"
 RUNNER_VERSION="${RUNNER_VERSION:-0.1.0}"
-RUNNER_ADAPTER="${RUNNER_ADAPTER:-runner_wrapper.adapter:run_job}"
+RUNNER_ADAPTER="${RUNNER_ADAPTER:-runner_wrapper.adapters.perspective:run_job}"
 REQUEST_FILE="${RUNNER_REQUEST_FILE:-${SCRIPT_DIR}/examples/${RUNNER_TYPE}_job_request.json}"
 
 usage() {
@@ -42,9 +42,10 @@ Environment:
   RUNNER_ADAPTER=${RUNNER_ADAPTER}
   RUNNER_REQUEST_FILE=${REQUEST_FILE}
   RUNNER_DATA_DIR=${DATA_DIR}
+  RUNNER_GPUS=${RUNNER_GPUS:-all}
 
-For the bundled test adapter, set TEST_RUNNER_MIN_SECONDS=0 and
-TEST_RUNNER_MAX_SECONDS=0 when you want a fast smoke run.
+The first smoke run downloads model checkpoints into RUNNER_DATA_DIR/model_cache.
+Set HF_TOKEN when authenticated Hugging Face access is required.
 EOF
 }
 
@@ -71,19 +72,10 @@ prepare_data() {
     "${DATA_DIR}/datasets/smoke" \
     "${DATA_DIR}/model_cache" \
     "${DATA_DIR}/pipelines" \
-    "${DATA_DIR}/output/my-generator@0.1.0/smoke-dataset/sample-1"
+    "${DATA_DIR}/output/panodreamer-perspective@0.1.0/smoke/campus"
 
-  if [[ ! -f "${DATA_DIR}/datasets/smoke/image.png" ]]; then
-    printf 'smoke input\n' > "${DATA_DIR}/datasets/smoke/image.png"
-  fi
-
-  if [[ ! -f "${DATA_DIR}/datasets/smoke/reference.png" ]]; then
-    printf 'smoke reference\n' > "${DATA_DIR}/datasets/smoke/reference.png"
-  fi
-
-  if [[ ! -f "${DATA_DIR}/output/my-generator@0.1.0/smoke-dataset/sample-1/scene.glb" ]]; then
-    printf 'smoke generated scene\n' > "${DATA_DIR}/output/my-generator@0.1.0/smoke-dataset/sample-1/scene.glb"
-  fi
+  cp "${REPO_ROOT}/examples/29_real_campus_3.png" \
+    "${DATA_DIR}/datasets/smoke/image.png"
 }
 
 run_container() {
@@ -112,9 +104,13 @@ run_container() {
   if [[ -n "${RUNNER_LOG_LEVEL:-}" ]]; then
     env_args+=(-e "RUNNER_LOG_LEVEL=${RUNNER_LOG_LEVEL}")
   fi
+  if [[ -n "${HF_TOKEN:-}" ]]; then
+    env_args+=(-e "HF_TOKEN=${HF_TOKEN}")
+  fi
 
   docker run -d \
     --name "${CONTAINER}" \
+    --gpus "${RUNNER_GPUS:-all}" \
     -p "${HOST_PORT}:58090" \
     "${env_args[@]}" \
     -v "${DATA_DIR}:/data" \

@@ -1,6 +1,10 @@
 # Runner Wrapper
 
-`runner_wrapper/` turns a model repository into a SceneGenDeployBench runner image. It provides the HTTP server, job logging, resource measurements, Docker wiring, examples, and local test helper. A model repository normally only needs a model-specific `adapter.py` and runner catalog.
+This repository has two generator adapters that produce a `3dgs` PLY. `panodreamer-perspective` runs the full PanoDreamer pipeline from a perspective/pinhole `image` plus `job.parameters.prompt`; input metadata may declare a horizontal `fov`, with wider views center-cropped to 44.702 degrees and narrower views rejected. `panodreamer-panorama` starts at the depth stage from a full-360 panorama `image`, accepts `cylindrical` or `equirectangular`, and has no prompt or diffusion parameters.
+
+The panorama adapter uses PanoDreamer's native full-360 cylindrical canvas of 3912x512 pixels with approximately 44.702 degrees of vertical coverage. A matching cylindrical input is passed through. Other supported panorama geometry is resampled with PyTorch on CUDA; equirectangular latitude is mapped to cylindrical height rather than resized. Missing projection metadata defaults to equirectangular, the most common panorama format. Missing FOV defaults to 360 degrees horizontally and infers vertical coverage from image aspect ratio; for example, 2:1 becomes 360x180 degrees. A cylindrical image with a declared projection but no FOV is treated as a full-360 square-pixel cylindrical projection. Missing or stale resolution metadata uses the file's actual dimensions. Explicit partial panoramas, insufficient vertical coverage, pinhole, fisheye, and unspecified cubemap layouts are rejected.
+
+`runner_wrapper/` turns a model repository into a SceneGenDeployBench runner image. It provides the HTTP server, job logging, resource measurements, Docker wiring, examples, and local test helper. Model-specific entry points live under `adapters/`; each runner catalog selects exactly one.
 
 The directory `runner_wrapper/` is self-contained so it can be copied or pulled as a subtree without the main repository.
 
@@ -30,7 +34,9 @@ The main files are:
 
 ```text
 runner_wrapper/
-  adapter.py       model-specific job implementation
+  adapters/        model-specific job implementations
+    perspective.py perspective image pipeline
+    panorama.py    panorama-input pipeline
   files.py         compatible artifact publication
   server.py        shared HTTP runner server
   Dockerfile       runner image build
@@ -43,10 +49,11 @@ Copy the matching catalog template to `runner_wrapper/config/runners/<runner>.ya
 
 ## Build And Test
 
-Build from the model repository root:
+Initialize the pinned model source dependencies and build from the model repository root:
 
 ```bash
-docker build -f runner_wrapper/Dockerfile -t my-model-runner .
+git submodule update --init --recursive
+docker build -f runner_wrapper/Dockerfile -t scenegendeploybench-panodreamer:local .
 ```
 
 Or use the helper:
@@ -56,12 +63,7 @@ runner_wrapper/localtest.sh build
 runner_wrapper/localtest.sh smoke
 ```
 
-The bundled test adapter waits by default. For a quick wrapper smoke test:
-
-```bash
-TEST_RUNNER_MIN_SECONDS=0 TEST_RUNNER_MAX_SECONDS=0 \
-  runner_wrapper/localtest.sh smoke
-```
+The smoke request uses the included campus image and deliberately reduced model settings. The first run downloads several large public checkpoints into `data/model_cache`; set `HF_TOKEN` when the deployment requires authenticated Hugging Face access.
 
 ## Data Flow
 

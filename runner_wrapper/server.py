@@ -85,7 +85,9 @@ class RunnerSettings:
             contract_version=int(os.getenv("RUNNER_CONTRACT_VERSION", "1")),
             idle_timeout_seconds=int(os.getenv("RUNNER_IDLE_TIMEOUT_SECONDS", "900")),
             startup_timeout_seconds=float(os.getenv("RUNNER_STARTUP_TIMEOUT_SECONDS", "60")),
-            adapter_target=os.getenv("RUNNER_ADAPTER", "runner_wrapper.adapter:run_job"),
+            adapter_target=os.getenv(
+                "RUNNER_ADAPTER", "runner_wrapper.adapters.perspective:run_job"
+            ),
         )
 
 

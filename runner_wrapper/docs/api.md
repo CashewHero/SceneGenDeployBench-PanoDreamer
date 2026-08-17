@@ -2,7 +2,7 @@
 
 HTTP JSON contract between the orchestrator and a runner.
 
-`adapter.py` implements:
+The adapter selected by `RUNNER_ADAPTER` implements:
 
 ```python
 def run_job(job_request: dict) -> dict:
