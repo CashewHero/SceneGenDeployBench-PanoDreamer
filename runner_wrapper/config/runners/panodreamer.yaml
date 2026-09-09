@@ -1,0 +1,110 @@
+catalog_version: 1
+
+runners:
+  - runner: panodreamer-perspective
+    version: 0.1.1
+    latest: true
+    display_name: PanoDreamer Perspective
+    kind: generator
+    contract_version: 1
+    inputs:
+      data:
+        required_sample:
+          required_datatype:
+            - image
+    job_parameters:
+      # Prompt is required per job. PanoDreamer has no useful scene-agnostic prompt.
+      prompt: ""
+      negative_prompt: "caption, subtitle, text, blur, lowres, bad anatomy, bad hands, cropped, worst quality, watermark"
+      # seed: 1234
+      # panorama_width: 3912
+      # panorama_steps: 50
+      # panorama_iterations: 15
+      # guidance: 7.5
+      # depth_method: dav2
+      # depth_iterations: 15
+      # depth_bins: 10
+      # metric_dataset: vkitti
+      # ldi_layers: 4
+      # gs_iterations: 3000
+      # gs_views: 240
+      # gs_init_only: false
+      # gs_scale_mult: 2.0
+      # gs_init_opacity: 0.5
+      # gs_freeze_positions: false
+      # gs_depth_weight: 0.005
+      # gs_novel_view_weight: 0.5
+      # gs_novel_view_radius: 3.0
+      # gs_novel_view_start: 500
+      # gs_novel_view_every: 10
+      # gs_depth_max: 200.0
+      # debug: false
+    scheduling:
+      max_batch_size: 1
+      max_attempts: 2
+      job_timeout_minutes: 720
+      startup_timeout_minutes: 10
+    launcher:
+      driver: docker
+      compat_version: 1
+      image: ghcr.io/cashewhero/scenegendeploybench-panodreamer:0.1.1
+      gpus: all
+      endpoint:
+        port: 58090
+      env:
+        PANODREAMER_AUTO_DOWNLOAD_WEIGHTS: "1"
+        PANODREAMER_MODEL_CACHE_NAMESPACE: panodreamer
+        PYTORCH_ALLOC_CONF: expandable_segments:True
+        RUNNER_ADAPTER: runner_wrapper.adapters.perspective:run_job
+      env_passthrough:
+        - HF_TOKEN
+
+  - runner: panodreamer-panorama
+    version: 0.1.1
+    latest: true
+    display_name: PanoDreamer Panorama
+    kind: generator
+    contract_version: 1
+    inputs:
+      data:
+        required_sample:
+          required_datatype:
+            - image
+    # job_parameters:
+      # depth_method: dav2
+      # depth_iterations: 15
+      # depth_bins: 10
+      # metric_dataset: vkitti
+      # ldi_layers: 4
+      # gs_iterations: 3000
+      # gs_views: 240
+      # gs_init_only: false
+      # gs_scale_mult: 2.0
+      # gs_init_opacity: 0.5
+      # gs_freeze_positions: false
+      # gs_depth_weight: 0.005
+      # gs_novel_view_weight: 0.5
+      # gs_novel_view_radius: 3.0
+      # gs_novel_view_start: 500
+      # gs_novel_view_every: 10
+      # gs_depth_max: 200.0
+      # debug: false
+    scheduling:
+      max_batch_size: 1
+      max_attempts: 2
+      job_timeout_minutes: 720
+      startup_timeout_minutes: 10
+    launcher:
+      driver: docker
+      compat_version: 1
+      image: ghcr.io/cashewhero/scenegendeploybench-panodreamer:0.1.1
+      gpus: all
+      endpoint:
+        port: 58090
+      env:
+        PANODREAMER_AUTO_DOWNLOAD_WEIGHTS: "1"
+        PANODREAMER_MODEL_CACHE_NAMESPACE: panodreamer
+        PYTORCH_ALLOC_CONF: expandable_segments:True
+        RUNNER_ADAPTER: runner_wrapper.adapters.panorama:run_job
+      env_passthrough:
+        - HF_TOKEN

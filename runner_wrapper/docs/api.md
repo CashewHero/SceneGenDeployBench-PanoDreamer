@@ -155,7 +155,7 @@ An accepted response includes `accepted: true` and `state: "running"`.
       "3dgs": "3DGS-high-a1b2c3d4.ply"
     }
   },
-  "output_metadata": {"scene_scale": 1.0},
+  "output_metadata": {"scene_scale": 1.4, "scene_coordinate_system": "LDB"},
   "metrics": [],
   "artifacts": [
     {"artifact_type": "job_log", "path": "runner-high-a1b2c3d4.log"},
@@ -186,7 +186,7 @@ Failure shape:
 ## Result Rules
 
 - `output_files` uses `sample_id -> data_type -> relative path` and is omitted when the runner produces no reusable files.
-- `output_metadata` describes the generated outputs as a group and is omitted when empty. `scene_scale` is a nonzero finite number: displacement from the primary viewpoint in dataset space is multiplied by it before rendering in the generated scene; a negative value reverses the displacement direction.
+- `output_metadata` describes the generated outputs as a group and is omitted when empty. `scene_scale` is a nonzero finite number: displacement from the primary viewpoint in dataset space is multiplied by it before rendering in the generated scene; a negative value reverses the displacement direction. `scene_coordinate_system` is a nonempty uppercase axis-direction code whose three letters describe the positive X, Y, and Z axes. PanoDreamer reports `LDB`: +X left, +Y down, +Z backward.
 - The orchestrator resolves and stores the sample/data-type mapping in `output_files`; output targets can reuse it in any input role.
 - Construct `output_files` explicitly; do not infer it by scanning the output directory.
 - Keep semantic output keys such as `image`, `3dgs`, or `mesh`; uniqueness belongs in the filename.

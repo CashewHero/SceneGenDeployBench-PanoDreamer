@@ -4,7 +4,7 @@ This repository has two generator adapters that produce a `3dgs` PLY. `panodream
 
 The panorama adapter uses PanoDreamer's native full-360 cylindrical canvas of 3912x512 pixels with approximately 44.702 degrees of vertical coverage. A matching cylindrical input is passed through. Other supported panorama geometry is resampled with PyTorch on CUDA; equirectangular latitude is mapped to cylindrical height rather than resized. Missing projection metadata defaults to equirectangular, the most common panorama format. Missing FOV defaults to 360 degrees horizontally and infers vertical coverage from image aspect ratio; for example, 2:1 becomes 360x180 degrees. A cylindrical image with a declared projection but no FOV is treated as a full-360 square-pixel cylindrical projection. Missing or stale resolution metadata uses the file's actual dimensions. Explicit partial panoramas, insufficient vertical coverage, pinhole, fisheye, and unspecified cubemap layouts are rejected.
 
-`runner_wrapper/` turns a model repository into a SceneGenDeployBench runner image. It provides the HTTP server, job logging, resource measurements, Docker wiring, examples, and local test helper. Model-specific entry points live under `adapters/`; each runner catalog selects exactly one.
+`runner_wrapper/` turns a model repository into a SceneGenDeployBench runner image. It provides the HTTP server, job logging, resource measurements, Docker wiring, examples, and local test helper. Model-specific entry points live under `adapters/`; each runner catalog entry selects exactly one.
 
 The directory `runner_wrapper/` is self-contained so it can be copied or pulled as a subtree without the main repository.
 
@@ -45,7 +45,7 @@ runner_wrapper/
   examples/        request, catalog, Docker, and workflow templates
 ```
 
-Copy the matching catalog template to `runner_wrapper/config/runners/<runner>.yaml` and edit it for the model. To use the runner locally, copy that catalog into the active DeployBench runner-config directory.
+The distributable `runner_wrapper/config/runners/panodreamer.yaml` catalog contains both runners. Copy it into the active DeployBench runner-config directory.
 
 ## Build And Test
 

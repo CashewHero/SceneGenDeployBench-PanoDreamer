@@ -514,6 +514,7 @@ def _run_job_logged(
         output_ply = workspace_root / output_name
         shutil.move(source_ply, output_ply)
         output_files = {primary_sample: {"3dgs": output_name}}
+        output_metadata = dict(shared.OUTPUT_METADATA)
 
         resource_metrics = monitor.stop()
         monitor = None
@@ -541,6 +542,7 @@ def _run_job_logged(
             {
                 "inputs": inputs,
                 "output_files": output_files,
+                "output_metadata": output_metadata,
                 "parameters": parameters,
                 "source_projection": projection,
                 "model_projection": "cylindrical",
@@ -563,6 +565,7 @@ def _run_job_logged(
             "started_at": shared.utc_time(started_at),
             "completed_at": shared.utc_time(completed_at),
             "output_files": output_files,
+            "output_metadata": output_metadata,
             "metrics": metrics,
             "artifacts": [
                 {"artifact_type": "job_log", "path": log_path.name},

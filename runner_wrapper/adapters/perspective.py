@@ -24,6 +24,10 @@ logger = logging.getLogger("runner_wrapper.adapters.perspective")
 
 RUNNER_NAME = "panodreamer-perspective"
 MODEL_FOV_DEGREES = 44.701948991275390
+OUTPUT_METADATA = {
+    "scene_scale": 1.4,
+    "scene_coordinate_system": "LDB",
+}
 DEFAULT_NEGATIVE_PROMPT = (
     "caption, subtitle, text, blur, lowres, bad anatomy, bad hands, cropped, "
     "worst quality, watermark"
@@ -790,6 +794,7 @@ def _run_job_logged(
         output_ply = workspace_root / output_name
         shutil.move(source_ply, output_ply)
         output_files = {primary_sample: {"3dgs": output_name}}
+        output_metadata = dict(OUTPUT_METADATA)
 
         resource_metrics = monitor.stop()
         monitor = None
@@ -809,6 +814,7 @@ def _run_job_logged(
         report: dict[str, Any] = {
             "inputs": inputs,
             "output_files": output_files,
+            "output_metadata": output_metadata,
             "parameters": parameters,
             "model_metrics": model_metrics,
         }
@@ -830,6 +836,7 @@ def _run_job_logged(
             "started_at": utc_time(started_at),
             "completed_at": utc_time(completed_at),
             "output_files": output_files,
+            "output_metadata": output_metadata,
             "metrics": metrics,
             "artifacts": [
                 {"artifact_type": "job_log", "path": log_path.name},

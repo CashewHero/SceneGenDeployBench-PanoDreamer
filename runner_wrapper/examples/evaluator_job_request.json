@@ -7,7 +7,8 @@
     "primary_sample": "sample-1",
     "primary_sample_metadata": {},
     "primary_output_metadata": {
-      "scene_scale": 1.0
+      "scene_scale": 1.4,
+      "scene_coordinate_system": "LDB"
     },
     "source_job_id": "smoke-generation-job-1",
     "attempt": 1,

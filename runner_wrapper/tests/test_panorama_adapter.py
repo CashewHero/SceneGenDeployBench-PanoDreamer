@@ -178,6 +178,10 @@ class PanoramaAdapterPipelineTests(unittest.TestCase):
             )
             output_name = result["output_files"]["sample-1"]["3dgs"]
             self.assertTrue((workspace / output_name).is_file())
+            self.assertEqual(
+                result["output_metadata"],
+                {"scene_scale": 1.4, "scene_coordinate_system": "LDB"},
+            )
             self.assertNotIn("prompt", result)
             self.assertEqual(result["metrics"][-2]["name"], "panorama_generation_skipped")
 

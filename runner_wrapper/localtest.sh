@@ -17,7 +17,7 @@ HOST_PORT="${RUNNER_HOST_PORT:-58090}"
 DATA_DIR="${RUNNER_DATA_DIR:-${REPO_ROOT}/data}"
 RUNNER_NAME="${RUNNER_NAME:-panodreamer-perspective}"
 RUNNER_TYPE="${RUNNER_TYPE:-generator}"
-RUNNER_VERSION="${RUNNER_VERSION:-0.1.0}"
+RUNNER_VERSION="${RUNNER_VERSION:-0.1.1}"
 RUNNER_ADAPTER="${RUNNER_ADAPTER:-runner_wrapper.adapters.perspective:run_job}"
 REQUEST_FILE="${RUNNER_REQUEST_FILE:-${SCRIPT_DIR}/examples/${RUNNER_TYPE}_job_request.json}"
 
@@ -72,7 +72,7 @@ prepare_data() {
     "${DATA_DIR}/datasets/smoke" \
     "${DATA_DIR}/model_cache" \
     "${DATA_DIR}/pipelines" \
-    "${DATA_DIR}/output/panodreamer-perspective@0.1.0/smoke/campus"
+    "${DATA_DIR}/output/panodreamer-perspective@0.1.1/smoke/campus"
 
   cp "${REPO_ROOT}/examples/29_real_campus_3.png" \
     "${DATA_DIR}/datasets/smoke/image.png"
